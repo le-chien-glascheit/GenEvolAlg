@@ -21,11 +21,11 @@ def monte_carlo(maxS,L,N):
     print(f'Приспособленность = {max}, Кодировка = {maxS}')
 
 if __name__ == '__main__':
-    i = 0
-    L = 15 # ландшафт поиска
-    N = 32 # кол-во кодировок
-    max = 0 # макс приспособленность
-    maxS = '' # кодировка и решение
-    si = '' # кодировка
+    # i = 0
+    # max = 0
+    L = 15
+    N = 32
+    maxS = ''
+    si = ''
     xi = [format(x, 'b').zfill(L) for x in range(2 ** L)]
-    monte_carlo(maxS=maxS,L=xi,N = 32)
+    monte_carlo(maxS=maxS,L=xi,N=N)
