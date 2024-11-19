@@ -26,6 +26,5 @@ if __name__ == '__main__':
     L = 15
     N = 32
     maxS = ''
-    si = ''
     xi = [format(x, 'b').zfill(L) for x in range(2 ** L)]
     monte_carlo(maxS=maxS,L=xi,N=N)
