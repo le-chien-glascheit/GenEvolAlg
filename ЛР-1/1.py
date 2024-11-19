@@ -21,10 +21,19 @@ def monte_carlo(maxS,L,N):
     print(f'Приспособленность = {max}, Кодировка = {maxS}')
 
 if __name__ == '__main__':
-    # i = 0
-    # max = 0
+    i = 0
+    max = 0
     L = 15
     N = 32
     maxS = ''
     xi = [format(x, 'b').zfill(L) for x in range(2 ** L)]
-    monte_carlo(maxS=maxS,L=xi,N=N)
+    L=[]
+    while i<N:
+        max = random.choice(xi)
+        L.append(max)
+        si= int(max, 2)
+        print(f'#{i+1}  Кодировка = {max}, приспособленность = {si}\n')
+        i +=1
+    print(L)
+    print('-'*120 + '\n')
+    monte_carlo(maxS=maxS,L=L,N=N)
