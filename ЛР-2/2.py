@@ -16,7 +16,7 @@ def create_neighborhood(maxS):
     return neighborhood
 
 
-def depth_search():
+def depth_search(L,N):
     i = 0
     maxS = random.randint(0, 2 ** L - 1)
     max_val = xi(maxS)
@@ -45,5 +45,8 @@ def depth_search():
           f" его приспособленность max = {max_val}")
 
 
-# Запуск метода поиска в глубину
-depth_search()
+if __name__ == '__main__':
+    L = 5
+    N = 10
+
+    depth_search(L=L,N=N)
