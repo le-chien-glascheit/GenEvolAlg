@@ -48,3 +48,49 @@ def hill_climbing_search(L, N):
 L = 5
 N = 10
 hill_climbing_search(L, N)
+
+import random
+
+L = 5
+N = 10
+
+# Функция для вычисления приспособленности второго варианта
+def fitness(x):
+    return (x - 2**(L-1))**2
+
+# Функция для создания окрестности 𝛀(𝒎𝒂𝒙𝑺)
+def create_neighborhood(maxS):
+    neighborhood = []
+    for i in range(2**L):
+        neighborhood.append((i, fitness(i)))
+    return neighborhood
+
+# Функция для выполнения метода поиска в глубину
+def depth_search():
+    i = 0
+    maxS = random.randint(0, 2**L-1)
+    max_val = fitness(maxS)
+    neighborhood = create_neighborhood(maxS)
+
+    while i < N:
+        print(f"Шаг {i+1}: max = {max_val}, maxS = {maxS}, Окрестность({maxS}): {neighborhood}")
+
+        if not neighborhood:
+            break
+
+        si = random.choice(neighborhood)
+        neighborhood.remove(si)
+
+        if fitness(si[0]) > max_val:
+            maxS = si[0]
+            max_val = si[1]
+            neighborhood = create_neighborhood(maxS)
+            print(f"   Выбрано новое maxS = {maxS}, новый max = {max_val}")
+
+        i += 1
+
+    print(f"Искомое решение: maxS = {maxS}, его приспособленность max = {max_val}")
+
+# Запуск метода поиска в глубину
+depth_search()
+
