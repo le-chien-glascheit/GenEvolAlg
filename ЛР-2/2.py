@@ -4,7 +4,6 @@ L = 5
 N = 10
 
 
-# ПРИСПОСОБЛЕННОСТЬ
 def mu(x, L):
     return (x - 2 ** (L - 1)) ** 2
 
@@ -49,7 +48,7 @@ def depth_search(L, N):
             break
 
         si = random.choice(neighborhood)
-        print(f'выбрали случайный si из 𝛀(maxS):{si}')
+        print(f'Смотрим на случайный si из 𝛀(maxS): {si}')
         neighborhood.remove(si)
 
         if max < mu(int(si[0], 2), L):
@@ -68,7 +67,4 @@ if __name__ == '__main__':
     L = 5
     N = 32
 
-    # create_si(L=L, N=N)
-    # maxS = random.randint(0, 2 ** L - 1)
-    # create_neighborhood(maxS,L)
     depth_search(L=L, N=N)
