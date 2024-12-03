@@ -3,50 +3,73 @@ import random
 L = 5
 N = 10
 
-
-def xi(x):
+# ПРИСПОСОБЛЕННОСТЬ
+def mu(x, L):
     return (x - 2 ** (L - 1)) ** 2
 
 
 #  𝛀(𝒎𝒂𝒙𝑺)
-def create_neighborhood(maxS):
+def 𝛀(maxS,search_space, L):
     neighborhood = []
     for i in range(2 ** L):
-        neighborhood.append((i, xi(i)))
+        distance = 0
+        for j in range(len(maxS)):
+            if maxS[j] != search_space[i][j]:
+                distance += 1
+        if distance == 1:
+            neighborhood.append((format(i, 'b').zfill(L), mu(i, L)))
     return neighborhood
 
 
-def depth_search(L, N):
-    i = 0
-    maxS = random.randint(0, 2 ** L - 1)
-    max_val = xi(maxS)
-    neighborhood = create_neighborhood(maxS)
 
-    while i < N:
-        print(f"\n\nШаг {i + 1}:\n max = {max_val}, maxS = {maxS},"
+def depth_search(L, N):
+    search_space =create_si(L,N)
+    maxS = random.choice(search_space)
+    max = mu(int(maxS,2),L)
+    neighborhood = 𝛀(maxS,search_space, L)
+
+    for i in range(N):
+        print(f"\n\nШаг {i + 1}:\n max = {max}, maxS = {maxS},"
               f"\nОкрестность({maxS}): {neighborhood}")
 
         if not neighborhood:
             break
 
         si = random.choice(neighborhood)
+        print(f'выбрали случайный si из 𝛀(maxS):{si}')
         neighborhood.remove(si)
 
-        if xi(si[0]) > max_val:
+        if  max < mu(int(si[0],2),L):
             maxS = si[0]
-            max_val = si[1]
-            neighborhood = create_neighborhood(maxS)
-            print("\033[031m" + f'\tВыбрано новое maxS = {maxS},'
-                                f' новый max = {max_val}' + "\033[0m")
+            max = mu(int(maxS,2),L)
 
-        i += 1
+
+            neighborhood = 𝛀(maxS,search_space, L)
+            print("\033[031m" + f'\tВыбрано новое maxS = {maxS},'
+                                f' новый max = {max}' + "\033[0m")
+
 
     print(f"\n\t\tИскомое решение: maxS = {maxS},"
-          f" его приспособленность max = {max_val}")
+          f" его приспособленность max = {max}")
 
+
+def create_si(L, N):
+    xi = [format(x, 'b').zfill(L) for x in range(2 ** L)]
+    search_space = []
+    print('-' * 46 + '\n\n')
+    for i in range(N):
+        max = random.choice(xi)
+        search_space.append(max)
+        si = int(max, 2)
+        print(f'#{i + 1}  Кодировка = {max}, приспособленность = {si}\n')
+    print('\n\n' + '-' * 46 + '\n\n')
+    return search_space
 
 if __name__ == '__main__':
     L = 5
-    N = 10
+    N = 32
 
+    # create_si(L=L, N=N)
+    # maxS = random.randint(0, 2 ** L - 1)
+    # create_neighborhood(maxS,L)
     depth_search(L=L, N=N)
