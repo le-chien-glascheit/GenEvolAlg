@@ -1,7 +1,7 @@
 import random
 
-# Количество предметов
 N = 15
+max_weight = 80
 
 # Данные по предметам: (номер, цена, вес)
 items = [
@@ -22,39 +22,36 @@ items = [
     (15, 10, 11)
 ]
 
-# Максимальный вес
-max_weight = 80
 
 
 def unitInitialization():
-    """Генерирует особь и возвращает её."""
-    return [random.randint(0, 1) for _ in range(N)]  # Генерируем бинарный вектор
+    '''Генерирует особь'''
+    return [random.randint(0, 1) for _ in range(N)]
 
 
 def calcFitness(solution):
-    """Функция для подсчета приспособленности."""
+    """приспособленность"""
     total_value = sum(items[i][1] * solution[i] for i in range(N))
     total_weight = sum(items[i][2] * solution[i] for i in range(N))
 
-    # Если превышен лимит по весу - приспособленность равна нулю
     if total_weight > max_weight:
         return 0
     return total_value
 
 
 def crossover(parent1, parent2):
-    """Функция скрещивания двух особей для получения потомства."""
+    """Функция скрещивания"""
     point = random.randint(1, N - 1)
     child = parent1[:point] + parent2[point:]
     return child
 
 
 def mutate(child):
-    """Функция мутации потомства."""
+    """Функция мутации"""
     mutation_rate = 0.1  # шанс мутации
     for i in range(N):
         if random.random() < mutation_rate:
-            child[i] = 1 - child[i]  # Переключаем значение
+            child[i] = 1 - child[i]
     return child
 
 
