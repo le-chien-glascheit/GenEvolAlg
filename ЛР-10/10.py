@@ -3,7 +3,6 @@ import random
 N = 15
 max_weight = 80
 
-# Данные по предметам: (номер, цена, вес)
 items = [
     (1, 21, 2),
     (2, 19, 26),
@@ -24,12 +23,10 @@ items = [
 
 
 def randomInitialization():
-    """Случайное формирование начальной популяции."""
     return [random.randint(0, 1) for _ in range(N)]
 
 
 def greedyInitialization():
-    """Жадное формирование начальной популяции."""
     solution = [0] * N
     total_weight = total_value = 0
     for i in range(N):
@@ -41,24 +38,21 @@ def greedyInitialization():
 
 
 def calcFitness(solution):
-    """Функция для подсчета приспособленности."""
     total_value = sum(items[i][1] * solution[i] for i in range(N))
     total_weight = sum(items[i][2] * solution[i] for i in range(N))
 
     if total_weight > max_weight:
-        return 0
-    return total_value
+        return 0, total_weight
+    return total_value, total_weight
 
 
 def singlePointCrossover(parent1, parent2):
-    """Одноточечное скрещивание."""
     point = random.randint(1, N - 1)
     child = parent1[:point] + parent2[point:]
     return child
 
 
 def twoPointCrossover(parent1, parent2):
-    """Двухточечное скрещивание."""
     point1 = random.randint(0, N - 1)
     point2 = random.randint(0, N - 1)
 
@@ -71,7 +65,6 @@ def twoPointCrossover(parent1, parent2):
 
 
 def simpleMutation(child):
-    """Простая мутация."""
     mutation_rate = 0.1
     for i in range(N):
         if random.random() < mutation_rate:
@@ -80,17 +73,15 @@ def simpleMutation(child):
 
 
 def replacementMutation(child):
-    """Мутация с заменой."""
     mutation_rate = 0.1
     for i in range(N):
         if random.random() < mutation_rate:
-            child[i] = random.randint(0, 1)  # Заменяем на случайное значение
+            child[i] = random.randint(0, 1)
     return child
 
 
 def rouletteSelection(population):
-    """Рулеточная селекция."""
-    fitness_values = [calcFitness(ind) for ind in population]
+    fitness_values = [calcFitness(ind)[0] for ind in population]
 
     max_fitness = sum(fitness_values)
 
@@ -101,18 +92,17 @@ def rouletteSelection(population):
 
     current = 0
     for ind in population:
-        current += calcFitness(ind)
+        current += calcFitness(ind)[0]
         if current > pick:
             return ind
 
 
 def tournamentSelection(population):
-    """Турнирная селекция."""
     tournament_size = min(3, len(population))
 
     tournament = random.sample(population, tournament_size)
 
-    best_individual = max(tournament, key=calcFitness)
+    best_individual = max(tournament, key=lambda ind: calcFitness(ind)[0])
 
     return best_individual
 
@@ -135,34 +125,31 @@ def main():
         elif modeInit == 2:
             population.append(greedyInitialization())
 
-    # Основной цикл генетического алгоритма
-
-
     for generation in range(generations):
         print(f"\nПоколение № {generation + 1}:")
 
         fitness_values = [calcFitness(ind) for ind in population]
 
         for i in range(populations_number):
-            print(f"Индивид {i + 1}: {population[i]}, Приспособленность: {fitness_values[i]}")
+            value_fit, weight_fit = fitness_values[i]
+            print(f"Индивид {i + 1}: {population[i]}, Приспособленность: {value_fit}, Вес: {weight_fit}")
 
         best_index = fitness_values.index(max(fitness_values))
-        print("Лучшая особь:", population[best_index], f"| Приспособленность: {fitness_values[best_index]}")
+        best_value_fit, best_weight_fit = fitness_values[best_index]
+        print("Лучшая особь:", population[best_index], f"| Приспособленность: {best_value_fit}, Вес: {best_weight_fit}")
 
         new_population = []
 
         while len(new_population) < populations_number:
-            parent1 = rouletteSelection(population)  # Селектор может быть изменён на tournamentSelection
+            parent1 = rouletteSelection(population)
             parent2 = rouletteSelection(population)
 
-            # Скрещивание
-            if random.random() < 0.5:  # Шанс на одноточечное или двухточечное скрещивание
+            if random.random() < 0.5:
                 child = singlePointCrossover(parent1, parent2)
             else:
                 child = twoPointCrossover(parent1, parent2)
 
-            # Мутация
-            if random.random() < 0.5:  # Шанс на простую или замену мутации
+            if random.random() < 0.5:
                 child = simpleMutation(child)
             else:
                 child = replacementMutation(child)
@@ -170,6 +157,7 @@ def main():
             new_population.append(child)
 
         population = new_population
+
 
 if __name__ == "__main__":
     main()
